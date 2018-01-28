@@ -57,11 +57,10 @@ function showQuestion() {
 		for (var j = 0; j < questions[i].choices.length; j++) {
 			var choiceBtn = $('<button>');
 			choiceBtn.addClass("btn btn-success");
-			choiceBtn.data("value", j);
+			choiceBtn.data("questionId", i);
+			choiceBtn.data("choice", j);
 			choiceBtn.text(questions[i].choices[j]);
 			questionGroup.append(choiceBtn);
-
-			console.log(choiceBtn.data("value"));
 		}
 
 		questionGroups.append(questionGroup);
@@ -78,19 +77,42 @@ function countdown() {
 
 function stopGame() {
 	clearInterval(showPage);
-//	$("#question-groups").hide();
+	showAnswer();
 	compareAnswer();
 	$("#end").text("The End");
 }
 
 
 
-function compareAnswer() {
+function showAnswer() {
 	for (var i = 0; i<questions.length; i++) {
 		var ansDiv = $("<div>");
+		ansDiv.addClass("ans");
+		ansDiv.data("answer", i);
 		ansDiv.text(questions[i].answer);
 		$("#group" + i).append(ansDiv);
 	}
-	
+
 }
+
+
+
+
+function compareAnswer() {
+	$("button").click(function (){
+		var qId = parseInt($(this).data("questionId"));
+		var qChoice = parseInt($(this).data("choice"));
+		var userAns = questions[qId].choices[qChoice];
+
+		if (questions[qId].answer === userAns) {
+			$("#group" + qId).append("<div>" + "Correct" + "</div>");
+		} else {
+			$("#group" + qId).append("<div>" + "Wrong" + "</div>");
+		}
+
+	})
+
+}
+
+
 
