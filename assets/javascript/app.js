@@ -28,3 +28,10 @@ var questions = [{
 
 
 
+var showPage;
+
+$("#start").click(startGame);
+
+function startGame() {
+	showPage = setTimeout(showQuestion , 500);
+}
