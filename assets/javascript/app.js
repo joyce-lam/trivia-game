@@ -35,3 +35,20 @@ $("#start").click(startGame);
 function startGame() {
 	showPage = setTimeout(showQuestion , 500);
 }
+
+function showQuestion() {
+
+
+
+
+	
+}
+
+function countdown() {
+	setTimeout(stopGame, 1000*10);
+}
+
+function stopGame() {
+	clearInterval(showPage);
+	$("#end").text("The End");
+}
