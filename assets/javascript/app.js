@@ -30,20 +30,26 @@ var questions = [{
 
 var showPage;
 
-$("#start").click(startGame);
+
+$("#start").click(function() {
+	startGame();
+	$(this).hide();
+})
+
 
 function startGame() {
 	showPage = setTimeout(showQuestion , 500);
 }
+
 
 function showQuestion() {
 	var questionGroups = $('#question-groups');
 
 	for (var i = 0; i<questions.length; i++) {
 		var questionGroup = $('<div>');
-
+		var questionGroupId = questionGroup.attr("id", ('group' +i));
 		var questionDiv = $('<div>');
-		questionDiv.addClass(questions);
+		questionDiv.addClass("qdiv");
 		questionDiv.data("q", i);
 		questionDiv.html(questions[i].question);
 		questionGroup.append(questionDiv);
@@ -59,17 +65,32 @@ function showQuestion() {
 		}
 
 		questionGroups.append(questionGroup);
-
 	}
 
 		countdown();
 }
 
+
 function countdown() {
-	setTimeout(stopGame, 1000*10);
+	setTimeout(stopGame, 1000*5);
 }
+
 
 function stopGame() {
 	clearInterval(showPage);
+//	$("#question-groups").hide();
+	compareAnswer();
 	$("#end").text("The End");
 }
+
+
+
+function compareAnswer() {
+	for (var i = 0; i<questions.length; i++) {
+		var ansDiv = $("<div>");
+		ansDiv.text(questions[i].answer);
+		$("#group" + i).append(ansDiv);
+	}
+	
+}
+
