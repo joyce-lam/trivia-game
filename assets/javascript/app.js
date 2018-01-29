@@ -26,7 +26,7 @@ var questions = [{
 	}]
 
 
-var time = 5;
+var time = 60 * 2;
 var correct = 0;
 var incorrect = 0;
 var lockGame = false;
