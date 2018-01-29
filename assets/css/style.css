@@ -18,8 +18,8 @@ button {
 	margin-top: 50px;
 }
 
-#start {
-	margin-top: 50px;
+#start, #reset {
+	margin-top: 30px;
 }
 
 #question-groups {
@@ -37,10 +37,6 @@ button {
 	font-weight: 600;
 }
 
-.selected {
-	color: #ff0000;
-	font-weight: 600;
-}
 
 #result {
 	font-size: 30px;

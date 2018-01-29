@@ -26,7 +26,7 @@ var questions = [{
 	}]
 
 
-var time = 60 * 2;
+var time = 60 * 1;
 var correct = 0;
 var incorrect = 0;
 var lockGame = false;
@@ -96,7 +96,7 @@ function showQuestion() {
 
 		for (var j = 0; j < questions[i].choices.length; j++) {
 			var choiceBtn = $("<button>");
-			choiceBtn.addClass("btn btn-success");
+			choiceBtn.addClass("btn btn-info");
 			choiceBtn.data("questionId", i);
 			choiceBtn.data("choice", j);
 			choiceBtn.text(questions[i].choices[j]);
@@ -139,7 +139,7 @@ function saveAnswer() {
 		if (!lockGame) {
 			var qId = parseInt($(this).data("questionId"));
 			var qChoice = parseInt($(this).data("choice"));
-			$(this).addClass("selected").siblings().removeClass("selected");
+			$(this).addClass("selected btn-danger").siblings().removeClass("selected btn-danger");
 		}
 	})
 }
@@ -168,7 +168,7 @@ function compareAnswer() {
 		}
 	})	
 
-	displayResult();
+	setTimeout(displayResult, 1000*5);
 }
 
 
@@ -181,4 +181,16 @@ function displayResult() {
 	$("#question-groups").hide();
 }
 
+$("#reset").click(function() {
+	clearInterval(counting);
+	$("#question-groups").empty();
+	$("#result").empty();
+	$("#time-display").empty();
+	$("#start").show();
+	time = 60 * 1;
+	correct = 0;
+	incorrect = 0;
+	lockGame = false;
+	clockRunning = false;
+})
 
