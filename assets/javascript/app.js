@@ -13,7 +13,7 @@ var questions = [{
 	answer: "Eucalyptus leaves"
 	}, {
 	question: "What is the name of the popular Australian food spread used on sandwiches, toast and pastries?",
-	choices: ["Kaya", "Vegemite", "Skippy's", "Daiya"],
+	choices: ["Kaya", "Vegemite", "Skippy", "Daiya"],
 	answer: "Vegemite"
 	}, {
 	question: "What is a dingo?",
@@ -26,12 +26,11 @@ var questions = [{
 	}]
 
 
-
-
-var showPage;
+var time = 5;
+var correct = 0;
+var incorrect = 0;
 var lockGame = false;
 var clockRunning = false;
-var time = 60 * 2;
 
 
 $("#start").click(function() {
@@ -42,13 +41,12 @@ $("#start").click(function() {
 
 
 function startGame() {
-	showPage = setTimeout(showQuestion , 500);
+	showQuestion();
 }
 
 
 function countTime() {
 	if (!clockRunning) {
-		setTimeout(countingTime, 500);
 		counting = setInterval(countingTime, 1000);
 		clockRunning = true;
 	}
@@ -58,7 +56,12 @@ function countTime() {
 function countingTime() {
 	time--;
 	var currentTime = showTime(time);
-	$("#display").html("Time left:" + currentTime);
+	$("#time-display").html("Time left: " + currentTime);
+
+	if (time === 0) {
+		stopGame();
+		showAnswer();
+	}
 }
 
 
@@ -82,16 +85,17 @@ function showQuestion() {
 	var questionGroups = $('#question-groups');
 
 	for (var i = 0; i<questions.length; i++) {
-		var questionGroup = $('<div>');
-		var questionGroupId = questionGroup.attr("id", ('group' +i));
-		var questionDiv = $('<div>');
+		var questionGroup = $("<div>");
+		questionGroup.attr("id", ('group' +i));
+		questionGroup.addClass("question-group");
+		var questionDiv = $("<div>");
 		questionDiv.addClass("qdiv");
 		questionDiv.data("q", i);
 		questionDiv.html(questions[i].question);
 		questionGroup.append(questionDiv);
 
 		for (var j = 0; j < questions[i].choices.length; j++) {
-			var choiceBtn = $('<button>');
+			var choiceBtn = $("<button>");
 			choiceBtn.addClass("btn btn-success");
 			choiceBtn.data("questionId", i);
 			choiceBtn.data("choice", j);
@@ -101,24 +105,20 @@ function showQuestion() {
 
 		questionGroups.append(questionGroup);
 	}
-	
+
 	countdown();
-//	compareAnswer();
 }
 
 
 
 function countdown() {
 	saveAnswer();
-	setTimeout(stopGame, 1000*20);
-	setTimeout(showAnswer, 1000*20);
 }
 
 
 function stopGame() {
-	clearInterval(showPage, counting);
-//	compareAnswer();
-	$("#end").text("The End");
+	clearInterval(counting);
+	compareAnswer();
 	lockGame = true;
 }
 
@@ -128,46 +128,57 @@ function showAnswer() {
 		var ansDiv = $("<div>");
 		ansDiv.addClass("ans");
 		ansDiv.data("answer", i);
-		ansDiv.text(questions[i].answer);
+		ansDiv.text("Answer: " + questions[i].answer);
 		$("#group" + i).append(ansDiv);
 	}
 }
 
 
-var userAns = [];
-var qId;
-var qChoice;
-
 function saveAnswer() {
 	$("button").click(function (){
-			qId = parseInt($(this).data("questionId"));
-			console.log(qId);
-			qChoice = parseInt($(this).data("choice"));
+		if (!lockGame) {
+			var qId = parseInt($(this).data("questionId"));
+			var qChoice = parseInt($(this).data("choice"));
 			$(this).addClass("selected").siblings().removeClass("selected");
-
-
-			var userAnsDiv = $("<div>");
-			userAnsDiv.addClass("clicked");
-			userAnsDiv.data("ansId", qId);
-			userAnsDiv.data("ansChoice", qChoice);
-// 			userAnsDiv.html(questions[qId].choices[qChoice]);
-// 			$("#group" + qId).append(userAnsDiv);
-			// console.log(questions[qId].choices[qChoice]);
-			// userAns.push(questions[qId].choices[qChoice]);
-			
-		
-
+		}
 	})
 }
 
 
-// function compareAnswer() {
-	
+function compareAnswer() {
+	$(".question-group").each(function() {
+		var selectedButton = $(this).children("button.selected");
+
+		if (selectedButton.length === 1) {
+			var data = $(selectedButton).data();
+			var qId = data.questionId;
+			var choice = data.choice;
+
+			if (questions[qId].choices[choice] == questions[qId].answer) {
+				console.log(qId + ": Correct");
+				correct++;
+			} else {
+				console.log(qId + ": Incorrect");
+				incorrect++;
+			}
+
+		} else {
+			console.log(qId + ": Empty");
+			incorrect++;
+		}
+	})	
+
+	displayResult();
+}
 
 
+function displayResult() {
+	console.log(correct);
+	console.log(incorrect);
 
-//}
-
-
+	$("#result").append(correct + " Correct! " + incorrect + " Incorrect!");
+	$("#result").append("<img src='../trivia-game/assets/images/koala.jpg' alt='koala'>");
+	$("#question-groups").hide();
+}
 
 

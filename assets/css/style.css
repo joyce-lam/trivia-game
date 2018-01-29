@@ -7,5 +7,40 @@ body {
 	text-align: center;
 }
 
+#header {
+	font-size: 50px;
+	color: #0055ff;
+	font-weight: 900;
+	margin-top: 50px;
+}
+
+#start {
+	margin-top: 50px;
+}
+
+#question-groups {
+	font-size: 18px;
+}
+
+.qdiv {
+	margin: 5px;
+}
 
 
+#time-display {
+	font-size: 25px;
+	color: #9900ff;
+	font-weight: 600;
+}
+
+.selected {
+	color: #ff0000;
+	font-weight: 600;
+}
+
+#result {
+	font-size: 30px;
+	color: #1a1aff;
+	margin-top: 50px;
+
+}
