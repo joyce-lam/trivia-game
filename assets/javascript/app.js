@@ -31,7 +31,7 @@ var questions = [{
 var showPage;
 var lockGame = false;
 var clockRunning = false;
-var time = 60 * 3;
+var time = 60 * 2;
 
 
 $("#start").click(function() {
@@ -48,6 +48,7 @@ function startGame() {
 
 function countTime() {
 	if (!clockRunning) {
+		setTimeout(countingTime, 500);
 		counting = setInterval(countingTime, 1000);
 		clockRunning = true;
 	}
@@ -57,14 +58,14 @@ function countTime() {
 function countingTime() {
 	time--;
 	var currentTime = showTime(time);
-	$("#display").text(currentTime);
+	$("#display").html("Time left:" + currentTime);
 }
 
 
 function showTime() {
 	var minutes = Math.floor(time/60);
 	var seconds = time - (minutes * 60);
-	if (seconds <10) {
+	if (seconds < 10) {
 		seconds = "0" + seconds;
 	}
 
@@ -100,21 +101,25 @@ function showQuestion() {
 
 		questionGroups.append(questionGroup);
 	}
-
-		countdown();
+	
+	countdown();
+//	compareAnswer();
 }
 
 
+
 function countdown() {
-	setTimeout(stopGame, 1000*5);
-	setTimeout(showAnswer, 1000*5);
+	saveAnswer();
+	setTimeout(stopGame, 1000*20);
+	setTimeout(showAnswer, 1000*20);
 }
 
 
 function stopGame() {
 	clearInterval(showPage, counting);
-	compareAnswer();
+//	compareAnswer();
 	$("#end").text("The End");
+	lockGame = true;
 }
 
 
@@ -129,22 +134,40 @@ function showAnswer() {
 }
 
 
-function compareAnswer() {
-	$("button").click(function (){
-		if (lockGame !== true) {
-			var qId = parseInt($(this).data("questionId"));
-			var qChoice = parseInt($(this).data("choice"));
-			var userAns = questions[qId].choices[qChoice];
+var userAns = [];
+var qId;
+var qChoice;
 
-			if (questions[qId].answer === userAns) {
-				$("#group" + qId).append("<div>" + "Correct" + "</div>");
-			} else {
-				$("#group" + qId).append("<div>" + "Wrong" + "</div>");
-			}
-			lockGame = true;
-		}
+function saveAnswer() {
+	$("button").click(function (){
+			qId = parseInt($(this).data("questionId"));
+			console.log(qId);
+			qChoice = parseInt($(this).data("choice"));
+			$(this).addClass("selected").siblings().removeClass("selected");
+
+
+			var userAnsDiv = $("<div>");
+			userAnsDiv.addClass("clicked");
+			userAnsDiv.data("ansId", qId);
+			userAnsDiv.data("ansChoice", qChoice);
+// 			userAnsDiv.html(questions[qId].choices[qChoice]);
+// 			$("#group" + qId).append(userAnsDiv);
+			// console.log(questions[qId].choices[qChoice]);
+			// userAns.push(questions[qId].choices[qChoice]);
+			
+		
+
 	})
 }
+
+
+// function compareAnswer() {
+	
+
+
+
+//}
+
 
 
 
